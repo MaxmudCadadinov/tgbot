@@ -2,18 +2,24 @@ const { Bot } = require("grammy");
 const { conversations, createConversation } = require("@grammyjs/conversations");
 const axios = require("axios");
 const { new_keyboard, menu_carts } = require("./button.js")
+const { profile } = require('./profile.js')
+
+
+
 
 const bot = new Bot("7807708990:AAEpP-m3ch-VRtqZgFjt7dYaNZVCN9dSClI")
 
 bot.use(conversations());
 
-
+profile(bot)
 
 
 bot.command("start", async(ctx) => {ctx.reply("Добро пожаловать. Запущен и работает!"), 
     await ctx.reply("Выберите опцию:", { reply_markup: new_keyboard })
 })
-
+bot.hears("Продаваемые товары", async(ctx) => {
+    const response = await axios.get("http://localhost:3000/all_products")
+});
 
 async function registation(conversation, ctx){
     await ctx.reply('приступим к регистрации')
@@ -81,4 +87,3 @@ bot.hears("Войти", (ctx) => ctx.conversation.enter("login"));
 
 bot.start();
 
-module.exports = { bot }
